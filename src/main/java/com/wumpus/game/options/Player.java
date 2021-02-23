@@ -8,7 +8,7 @@ import lombok.Data;
 public class Player {
 	private String participantName;
 	private Integer arrows;
-	private String playerview;
+	private String playerview = "";
 	private Coordinate coordinate;
 	private Boolean isDead = Boolean.FALSE;
 	private Boolean isRich = Boolean.FALSE;
