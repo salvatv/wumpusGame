@@ -1,5 +1,8 @@
 package com.wumpus.game.services.movement;
 
+import java.util.List;
+
+import com.wumpus.game.constants.MovementConst;
 import com.wumpus.game.navigation.GameBoard;
 import com.wumpus.game.options.Player;
 import com.wumpus.game.options.Wumpus;
@@ -10,13 +13,14 @@ public class MovementServiceImpl {
 	private static final String NOT_A_VALID_MOVEMENT = "Not a valid movement";
 
 	public boolean checkLook(final String movement) {
-		return movement.toUpperCase().contains("W") || movement.toUpperCase().contains("S")
-				|| movement.toUpperCase().contains("A") || movement.toUpperCase().contains("D");
+		return movement.toUpperCase().contains(MovementConst.W) || movement.toUpperCase().contains(MovementConst.S)
+				|| movement.toUpperCase().contains(MovementConst.A) || movement.toUpperCase().contains(MovementConst.D);
 	}
 
 	public void look(final Player player, final String movement) {
-		if (movement.toUpperCase().contains("W") || movement.toUpperCase().contains("S")
-				|| movement.toUpperCase().contains("A") || movement.toUpperCase().contains("D")) {
+		if (movement.toUpperCase().contains(MovementConst.W) || movement.toUpperCase().contains(MovementConst.S)
+				|| movement.toUpperCase().contains(MovementConst.A)
+				|| movement.toUpperCase().contains(MovementConst.D)) {
 			player.setPlayerview(movement.toUpperCase());
 		} else {
 			System.out.print(NOT_A_VALID_MOVEMENT);
@@ -27,16 +31,16 @@ public class MovementServiceImpl {
 		if (this.movementValid(gameBoard, player)) {
 			final String view = player.getPlayerview();
 			switch (view.toUpperCase()) {
-			case "W":
+			case MovementConst.W:
 				player.getCoordinate().moveUp();
 				break;
-			case "S":
+			case MovementConst.S:
 				player.getCoordinate().moveDown();
 				break;
-			case "A":
+			case MovementConst.A:
 				player.getCoordinate().moveLeft();
 				break;
-			case "D":
+			case MovementConst.D:
 				player.getCoordinate().moveRight();
 				break;
 			default:
@@ -52,51 +56,62 @@ public class MovementServiceImpl {
 	}
 
 	private void checkGold(GameBoard gameBoard, Player player) {
-		if (gameBoard.getGold().getCoordinate().equals(player.getCoordinate())) {
-			player.setIsRich(gameBoard.getGold().equals(player.getCoordinate()));
-			System.out.print("You got the gold, now run to the start position!");
-		}
+		gameBoard.getGoldList().forEach(gold -> {
+			if (gold.getCoordinate().equals(player.getCoordinate())) {
+				player.setIsRich(gold.getCoordinate().equals(player.getCoordinate()));
+				System.out.print("You got the gold, now run to the start position!");
+			}
+		});
 	}
 
 	public boolean movementValid(GameBoard gameBoard, Player player) {
 		return !player.getCoordinate().getY().equals(gameBoard.getHeight())
-				&& player.getPlayerview().equalsIgnoreCase("W")
-				|| player.getCoordinate().getY() == 0 && player.getPlayerview().equalsIgnoreCase("S")
-				|| player.getCoordinate().getX() == gameBoard.getWidth() && player.getPlayerview().equalsIgnoreCase("D")
-				|| player.getCoordinate().getX() == 0 && player.getPlayerview().equalsIgnoreCase("A");
+				&& player.getPlayerview().equalsIgnoreCase(MovementConst.W)
+				|| player.getCoordinate().getY() == 0 && player.getPlayerview().equalsIgnoreCase(MovementConst.S)
+				|| player.getCoordinate().getX() == gameBoard.getWidth()
+						&& player.getPlayerview().equalsIgnoreCase(MovementConst.D)
+				|| player.getCoordinate().getX() == 0 && player.getPlayerview().equalsIgnoreCase(MovementConst.A);
 	}
 
-	public void shoot(Player player, Wumpus wumpus) {
+	public void shoot(Player player, List<Wumpus> wumpusList) {
 		final String view = player.getPlayerview();
 
 		switch (view.toUpperCase()) {
-		case "W":
-			if (player.getCoordinate().getX().equals(wumpus.getCoordinate().getX())
-					&& player.getCoordinate().getY() < wumpus.getCoordinate().getY()) {
-				wumpus.setIsDead(Boolean.TRUE);
-				System.out.print(YOU_KILLED_THE_WUMPUS);
-			}
+		case MovementConst.W:
+			wumpusList.forEach(wumpus -> {
+				if (player.getCoordinate().getX().equals(wumpus.getCoordinate().getX())
+						&& player.getCoordinate().getY() < wumpus.getCoordinate().getY()) {
+					wumpus.setIsDead(Boolean.TRUE);
+					System.out.print(YOU_KILLED_THE_WUMPUS);
+				}
+			});
 			break;
-		case "S":
-			if (player.getCoordinate().getX().equals(wumpus.getCoordinate().getX())
-					&& player.getCoordinate().getY() > wumpus.getCoordinate().getY()) {
-				wumpus.setIsDead(Boolean.TRUE);
-				System.out.print(YOU_KILLED_THE_WUMPUS);
-			}
+		case MovementConst.S:
+			wumpusList.forEach(wumpus -> {
+				if (player.getCoordinate().getX().equals(wumpus.getCoordinate().getX())
+						&& player.getCoordinate().getY() > wumpus.getCoordinate().getY()) {
+					wumpus.setIsDead(Boolean.TRUE);
+					System.out.print(YOU_KILLED_THE_WUMPUS);
+				}
+			});
 			break;
-		case "A":
-			if (player.getCoordinate().getY().equals(wumpus.getCoordinate().getY())
-					&& player.getCoordinate().getX() > wumpus.getCoordinate().getX()) {
-				wumpus.setIsDead(Boolean.TRUE);
-				System.out.print(YOU_KILLED_THE_WUMPUS);
-			}
+		case MovementConst.A:
+			wumpusList.forEach(wumpus -> {
+				if (player.getCoordinate().getY().equals(wumpus.getCoordinate().getY())
+						&& player.getCoordinate().getX() > wumpus.getCoordinate().getX()) {
+					wumpus.setIsDead(Boolean.TRUE);
+					System.out.print(YOU_KILLED_THE_WUMPUS);
+				}
+			});
 			break;
-		case "D":
-			if (player.getCoordinate().getY().equals(wumpus.getCoordinate().getY())
-					&& player.getCoordinate().getX() < wumpus.getCoordinate().getX()) {
-				wumpus.setIsDead(Boolean.TRUE);
-				System.out.print(YOU_KILLED_THE_WUMPUS);
-			}
+		case MovementConst.D:
+			wumpusList.forEach(wumpus -> {
+				if (player.getCoordinate().getY().equals(wumpus.getCoordinate().getY())
+						&& player.getCoordinate().getX() < wumpus.getCoordinate().getX()) {
+					wumpus.setIsDead(Boolean.TRUE);
+					System.out.print(YOU_KILLED_THE_WUMPUS);
+				}
+			});
 			break;
 		default:
 			System.out.print(NOT_A_VALID_MOVEMENT);

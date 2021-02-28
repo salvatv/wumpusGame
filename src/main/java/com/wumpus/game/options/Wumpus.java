@@ -14,17 +14,13 @@ public class Wumpus {
 	private Boolean isDead = Boolean.FALSE;
 
 	public void generateSmells() {
-		final Coordinate leftSmell = new Coordinate(this.coordinate.getX(), this.coordinate.getY());
-		leftSmell.moveLeft();
+		final Coordinate leftSmell = new Coordinate(Integer.sum(this.coordinate.getX(), -1), this.coordinate.getY());
 		this.smells.add(leftSmell);
-		final Coordinate rightSmell = new Coordinate(this.coordinate.getX(), this.coordinate.getY());
-		rightSmell.moveRight();
-		this.smells.add(leftSmell);
-		final Coordinate upSmell = new Coordinate(this.coordinate.getX(), this.coordinate.getY());
-		upSmell.moveUp();
+		final Coordinate rightSmell = new Coordinate(Integer.sum(this.coordinate.getX(), 1), this.coordinate.getY());
+		this.smells.add(rightSmell);
+		final Coordinate upSmell = new Coordinate(this.coordinate.getX(), Integer.sum(this.coordinate.getY(), 1));
 		this.smells.add(upSmell);
-		final Coordinate downSmell = new Coordinate(this.coordinate.getX(), this.coordinate.getY());
-		downSmell.moveDown();
+		final Coordinate downSmell = new Coordinate(this.coordinate.getX(), Integer.sum(this.coordinate.getY(), -1));
 		this.smells.add(downSmell);
 	}
 
