@@ -67,10 +67,10 @@ public class MovementServiceImpl {
 	public boolean movementValid(GameBoard gameBoard, Player player) {
 		return !player.getCoordinate().getY().equals(gameBoard.getHeight())
 				&& player.getPlayerview().equalsIgnoreCase(MovementConst.W)
-				|| player.getCoordinate().getY() == 0 && player.getPlayerview().equalsIgnoreCase(MovementConst.S)
-				|| player.getCoordinate().getX() == gameBoard.getWidth()
+				|| !player.getCoordinate().getY().equals(0) && player.getPlayerview().equalsIgnoreCase(MovementConst.S)
+				|| !player.getCoordinate().getX().equals(gameBoard.getWidth())
 						&& player.getPlayerview().equalsIgnoreCase(MovementConst.D)
-				|| player.getCoordinate().getX() == 0 && player.getPlayerview().equalsIgnoreCase(MovementConst.A);
+				|| !player.getCoordinate().getX().equals(0) && player.getPlayerview().equalsIgnoreCase(MovementConst.A);
 	}
 
 	public void shoot(Player player, List<Wumpus> wumpusList) {
